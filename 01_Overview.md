@@ -1,2 +1,3 @@
-# OVERVIEW 
-**The Project helps to analyze what makes a crowdfunding campaign successful.**
+# Project Overview
+
+**This project analyzes Kickstarter crowdfunding campaigns to understand what drives success and failure.**
