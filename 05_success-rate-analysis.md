@@ -3,10 +3,10 @@
 **What percentage of Kickstarter campaigns succeed vs fail?**
 
 ### *SQL Query*
-![alt text](1.jpg)
+![alt text](images/success_rate.jpg)
 
 ### *Result*
-![alt text](1_result.jpg)
+![alt text](images/success_rate_result.jpg)
 
 ## *Insights*
 - **Nearly 60% of campaigns fail.**
