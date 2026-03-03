@@ -2,8 +2,8 @@
 
 ## *This section evaluates how funding goal strategy influences Kickstarter campaign performance.*
 
-1. ### Does setting an unrealistic goal reduce success probability?
-2. ### What goal range maximizes funding efficiency?
+### 1. Does setting an unrealistic goal reduce success probability?
+### 2. What goal range maximizes funding efficiency?
 
 ---
 
@@ -77,13 +77,13 @@ GROUP BY goal_type;
 ### 💼 Business Interpretation
 
 Campaigns exceeding 3× their category median goal:
-    - Increase perceived execution risk
-    - Slow early funding momentum
-    - Require unrealistic average pledge per backer
-    - Reduce probability of reaching funding threshold
+- Increase perceived execution risk
+- Slow early funding momentum
+- Require unrealistic average pledge per backer
+- Reduce probability of reaching funding threshold
 
-**Conclusion:**  
-Excessively ambitious funding targets significantly undermine campaign viability.
+#### **Conclusion:**  
+##### *Excessively ambitious funding targets significantly undermine campaign viability.*
 
 ---
 
@@ -92,11 +92,11 @@ Excessively ambitious funding targets significantly undermine campaign viability
 ### Problem Framing
 
 There is a structural tradeoff:
-    - Low goals → High success probability but low capital raised  
-    - High goals → High capital potential but low success probability  
+- Low goals → High success probability but low capital raised  
+- High goals → High capital potential but low success probability  
 
 To balance risk and reward, we define:
-    > **Expected Value = Success Rate × Average Pledged**
+> **Expected Value = Success Rate × Average Pledged**
 
 This metric captures funding efficiency.
 
