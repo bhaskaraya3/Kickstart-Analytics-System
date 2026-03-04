@@ -188,14 +188,84 @@ For risk-averse creators, $25K–$50K may be strategically preferable.
 
 ---
 
-# Final Conclusion
 
-Goal strategy materially impacts crowdfunding performance.
+## 3. Does Setting a Lower Goal Increase Success Probability?
 
-- Excessively high relative goals reduce success probability by ~50%.
-- Funding efficiency peaks in the $50K–$100K range.
-- There exists a clear risk–reward tradeoff.
+### Business Question
+Do campaigns with lower funding goals have a higher probability of success?
 
-Crowdfunding success is not random — it is structurally influenced by how ambitious a campaign positions its funding target.
+Crowdfunding inherently involves a tradeoff:
+- **Lower goals** → Easier to reach → Higher probability of success  
+- **Higher goals** → Harder to reach → Lower probability of success  
+
+To evaluate this, campaigns were grouped into goal ranges and their success rates were compared.
 
 ---
+
+### SQL Query
+
+```sql
+WITH goal_bins AS(
+SELECT 
+CASE
+	WHEN goal < 10000 THEN 'Low goal'
+    WHEN goal < 50000 THEN 'Medium goal'
+    WHEN goal < 200000 THEN 'High goal'
+    ELSE 'Very High goal'
+END AS goal_groups,
+state
+FROM kickstart
+)
+SELECT 
+goal_groups,
+COUNT(*) AS total_campaigns,
+SUM(CASE WHEN state='Successful' THEN 1 ELSE 0 END) AS successful_campaigns,
+ROUND(100*AVG(state = 'Successful'),2) AS success_rate
+FROM goal_bins
+GROUP BY goal_groups
+ORDER BY success_rate DESC;
+```
+
+---
+
+### Results
+
+| Goal Group | Total Campaigns | Successful Campaigns | Success Rate |
+|------------|----------------|----------------------|--------------|
+| Low goal | 229,679 | 98,950 | **43.08%** |
+| Medium goal | 108,914 | 30,547 | 28.05% |
+| High goal | 29,101 | 4,055 | 13.93% |
+| Very High goal | 7,159 | 299 | **4.18%** |
+
+---
+
+### Key Insight
+
+Success probability **decreases sharply as funding goals increase**:
+
+- Low goal campaigns succeed **43% of the time**
+- Medium goal campaigns succeed **28% of the time**
+- High goal campaigns succeed **14% of the time**
+- Very high goal campaigns succeed only **4% of the time**
+
+This indicates a strong **inverse relationship between goal size and success probability**.
+
+---
+
+### Business Interpretation
+
+Lower funding targets increase campaign feasibility by:
+
+- Reducing the threshold required to reach full funding
+- Accelerating early momentum and social proof
+- Lowering perceived risk for potential backers
+
+Conversely, campaigns with very high goals require significantly more backers and funding momentum, making successful completion much less likely.
+
+---
+
+### Conclusion
+
+Setting a **lower funding goal significantly increases the probability of campaign success**.
+
+However, while lower goals maximize success probability, they may also limit the total capital raised. Creators must balance **funding ambition with realistic campaign feasibility** when determining their funding target.
