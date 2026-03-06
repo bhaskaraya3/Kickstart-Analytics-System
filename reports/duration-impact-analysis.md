@@ -41,6 +41,7 @@ ROUND(100 * AVG(state='Successful'),2) AS success_rate
 FROM duration_bins
 GROUP BY duration_bucket
 ORDER BY success_rate DESC;
+```
 
 ## Result
 
