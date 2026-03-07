@@ -102,8 +102,8 @@ MONTHNAME(launched) AS launch_month,
 COUNT(*) AS total_campaigns,
 SUM(state = 'Successful') AS successful_campaigns,
 ROUND(100 * AVG(state = 'Successful'),2) AS success_rate,
-AVG(backers) AS avg_backers,
-AVG(pledged) AS avg_pledged
+ROUND(100 * AVG(backers),2) AS avg_backers,
+ROUND(100 * AVG(pledged),2) AS avg_pledged
 FROM kickstart
 GROUP BY launch_month
 ORDER BY success_rate DESC;
