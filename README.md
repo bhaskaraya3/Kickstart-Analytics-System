@@ -1,7 +1,8 @@
 # Kickstart Campaigns Analysis
 
 ## Project Overview
-This project analyzes Kickstarter campaign data to reveal unhidden trends and insights that can help creators optimize their campaigns for success. We explore various factors such as campaign duration, funding goals, category performance, and more to understand what contributes to a successful Kickstarter campaign.
+This project analyzes Kickstarter campaign data to reveal unhidden trends and insights that can help creators optimize their campaigns for success.
+We explore various factors such as campaign duration, funding goals, category performance, and more to understand what contributes to a successful Kickstarter campaign.
 
 ## About Dataset
 The dataset contains information about Kickstarter campaigns, including:
@@ -20,9 +21,9 @@ This data allows us to perform a comprehensive analysis of the factors influenci
 ### *1. What is the success rate?*
 
 #### Insights
-> Nearly **60%** of campaigns fail.
-> Kickstarter is highly competitive.
-> More than half of creators do not meet their funding goals.
+- Nearly **60%** of campaigns fail.
+- Kickstarter is highly competitive.
+- More than half of creators do not meet their funding goals.
 
 **This indicates the importance of goal sizing, duration optimization, and category positioning.**
 
