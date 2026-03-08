@@ -17,7 +17,9 @@ The dataset contains information about Kickstarter campaigns, including:
 
 This data allows us to perform a comprehensive analysis of the factors influencing campaign success.
 
+---
 ## Core Business Questions
+---
 ### *1. What is the success rate?*
 
 #### Insights
@@ -26,6 +28,8 @@ This data allows us to perform a comprehensive analysis of the factors influenci
 - More than half of creators do not meet their funding goals.
 
 **This indicates the importance of goal sizing, duration optimization, and category positioning.**
+
+---
 
 ### *2. Does funding goal impact success?*
 
@@ -38,7 +42,9 @@ This data allows us to perform a comprehensive analysis of the factors influenci
 
 **Excessively ambitious funding targets significantly undermine campaign viability.**
 
-### 3. How do backers influence outcomes?
+---
+
+### 3. *How do backers influence outcomes?*
 
 #### Insights
 - Success probability increases dramatically as the number of backers grows:
@@ -49,7 +55,9 @@ This data allows us to perform a comprehensive analysis of the factors influenci
 
 **This shows a strong positive relationship between community size and campaign success.**
 
-### 4. Does campaign duration matter? 
+---
+
+### 4. *Does campaign duration matter?*
 
 #### Insights
 
@@ -65,3 +73,4 @@ This data allows us to perform a comprehensive analysis of the factors influenci
     - Campaigns running more than 90 days have the lowest success rate (~29%).  
     - Long durations may reduce urgency and signal weaker campaign planning.
 
+---
