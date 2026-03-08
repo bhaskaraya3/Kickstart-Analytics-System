@@ -7,9 +7,11 @@
 4. *Does campaign duration matter?*
 
 **Success Rate Analysis**
-1. *What percentage of campaigns succeed vs fail?*
-2. *Which category has the highest success rate?*
-3. *Causes of failed campaigns*
+1. *What percentage of Kickstarter campaigns succeed vs fail?*
+2. *Which Category Has the Highest Success Rate?*
+3. *What are the major causes of failed campaigns?*
+    - A. Impact of High Funding Goals
+    - B. Impact of Campaign Duration
 
 **Goal Optimization**
 1. *Does the funding goal influence the probability of success?*
