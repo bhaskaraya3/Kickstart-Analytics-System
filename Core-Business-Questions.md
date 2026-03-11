@@ -14,15 +14,14 @@
     - B. Impact of Campaign Duration
 
 **Goal Optimization**
-1. *Does the funding goal influence the probability of success?*
+1. *Impact of Unrealistic Funding Goals*
 2. *What would be the optimal Goal range?*
-3. *Does low goal often increase success probability?*
+3. *Does Setting a Lower Goal Increase Success Probability?*
 
 **Backer Behavior Analysis**
-1. *How do backers influence campaign success?*
-2. *Are successful projects driven by small backers of big?*
+1. *How does the number of backers influence campaign success?*
+2. *Are Successful Campaigns Driven by Many Small Backers or Large Contributions?*
 
 **Duration Impact Analysis**
-1. *Does campaign duration affect success probability?*
-2. *What is the best campaign duration?*
-3. *What is the best month to launch campaigns?*
+1. *Analyze whether the duration of a Kickstarter campaign influences its probability of success.*
+2. *Best Month to Launch a Kickstarter Campaign*
