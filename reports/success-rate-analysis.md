@@ -2,7 +2,7 @@
 
 ---
 
-## 1. *What percentage of Kickstarter campaigns succeed vs fail?*
+## 1. What percentage of Kickstarter campaigns succeed vs fail?
 
 ### SQL Query
 ```sql
@@ -31,7 +31,7 @@ ORDER BY percentage DESC;
 
 ---
 
-## 2. *Which Category Has the Highest Success Rate?*
+## 2. Which Category Has the Highest Success Rate?
 
 ### SQL Query
 ```sql
@@ -105,7 +105,7 @@ ORDER BY success_rate DESC;
 
 ---
 
-## 3. *What are the major causes of failed campaigns?*
+## 3. What are the major causes of failed campaigns?
 
 ### A. Impact of High Funding Goals
 
@@ -202,5 +202,3 @@ ORDER BY success_rate DESC;
 2. **Community engagement (number of backers) strongly predicts campaign outcomes.**
 3. **Shorter campaigns generate stronger funding momentum.**
 4. **Creative and performance-based categories outperform hardware-focused projects.**
-
----
