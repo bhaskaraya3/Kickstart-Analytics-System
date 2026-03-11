@@ -2,8 +2,7 @@
 
 ---
 
-### 1. Business Question
-How does the number of backers influence campaign success?
+### 1. How does the number of backers influence campaign success?
 
 ### SQL Query
 ```sql
@@ -51,9 +50,9 @@ ORDER BY success_rate DESC;
 **This shows a strong positive relationship between community size and campaign success**.
 
 ### Conclusion
-- **Backer engagement is one of the strongest predictors of crowdfunding success.**
+- Backer engagement is one of the strongest predictors of crowdfunding success.
 
-- **Campaigns that attract a large community early are significantly more likely to reach their funding goals due to momentum, visibility, and social validation.**
+- Campaigns that attract a large community early are significantly more likely to reach their funding goals due to momentum, visibility, and social validation.
 
 ---
 
