@@ -17,7 +17,6 @@ FROM kickstart
 SELECT
 backer_bucket,
 COUNT(*) AS total_campaigns,
-SUM(CASE WHEN state='Successful' THEN 1 ELSE 0 END) AS successful_campaigns,
 ROUND(100*AVG(state='Successful'),2) AS success_rate
 FROM backer_groups
 GROUP BY backer_bucket
@@ -46,7 +45,6 @@ WHERE backers > 0
 SELECT
 pledged_per_backer_bucket,
 COUNT(*) AS total_campaigns,
-SUM(state='Successful') AS successful_campaigns,
 ROUND(100 * AVG(state='Successful'),2) AS success_rate
 FROM pledged_backer_bucket
 GROUP BY pledged_per_backer_bucket

@@ -15,7 +15,6 @@ FROM kickstart
 SELECT 
 duration_bucket,
 COUNT(*) AS total_campaigns,
-SUM(state='Successful') AS successful_rate,
 ROUND(100*AVG(state='Successful'),2) AS success_rate
 FROM duration_bucket
 GROUP BY duration_bucket
@@ -24,19 +23,15 @@ ORDER BY success_rate DESC;
 -- Best Month to Launch a Kickstarter Campaign
 WITH launch_month_data AS (
 SELECT
-MONTHNAME(launched) AS launch_month,
 state,
-backers,
-pledged
+MONTHNAME(launched) AS launch_month
 FROM kickstart
 )
 SELECT
 launch_month,
 COUNT(*) AS total_campaigns,
-SUM(state = 'Successful') AS successful_campaigns,
-ROUND(100 * AVG(state = 'Successful'),2) AS success_rate,
-ROUND(100 * AVG(backers),2) AS avg_backers,
-ROUND(100 * AVG(pledged),2) AS avg_pledged
+ROUND(100 * AVG(state = 'Successful'),2) AS success_rate
 FROM launch_month_data
 GROUP BY launch_month
-ORDER BY success_rate DESC;
+ORDER BY success_rate DESC
+LIMIT 3;

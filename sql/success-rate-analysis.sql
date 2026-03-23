@@ -15,32 +15,25 @@ category,
 ROUND(100* SUM(CASE WHEN state='Successful' THEN 1 ELSE 0 END)/COUNT(*),2) AS success_rate
 FROM kickstart
 GROUP BY category
-ORDER BY success_rate DESC;
+ORDER BY success_rate DESC
+LIMIT 1;
 
 -- What are the major causes of failed campaigns?
 -- A. Impact of High Funding Goals
-SELECT 
-goal,
-pledged,
-backers,
-state
+SELECT
+CASE 
+	WHEN goal<=10000 THEN 'Low'
+	WHEN goal<=50000 THEN 'Mid'
+	WHEN goal<=100000 THEN 'High'
+	ELSE 'Extremely High'
+END AS funding_bucket,
+COUNT(*) AS campaigns,
+ROUND(SUM(CASE WHEN state='Failed' THEN 1 ELSE 0 END)/COUNT(*)*100,2) AS failing_rate
 FROM kickstart
-ORDER BY goal DESC;
+GROUP BY funding_bucket
+ORDER BY failing_rate DESC;
 
 -- B. Impact of Campaign Duration
-SELECT
-campaign_duration_days,
-COUNT(*) AS total_campaingns,
-SUM(CASE WHEN state='Successful' THEN 1 ELSE 0 END) AS successful_count,
-SUM(CASE WHEN state='Failed' THEN 1 ELSE 0 END) AS failed_count,
-ROUND(100*SUM(CASE WHEN state='Successful' THEN 1 ELSE 0 END)/COUNT(*),2) AS successful_rate,
-ROUND(100*SUM(CASE WHEN state='Failed' THEN 1 ELSE 0 END)/COUNT(*),2) AS failed_rate
-FROM kickstart
-WHERE state IN ('Successful','Failed')
-GROUP BY campaign_duration_days
-ORDER BY campaign_duration_days DESC;
-
--- Bucket Duration
 SELECT
 CASE 
     WHEN campaign_duration_days <= 30 THEN 'Short (0-30)'
@@ -48,13 +41,8 @@ CASE
     ELSE 'Long (61+)'
 END AS duration_bucket,
 COUNT(*) AS total_campaigns,
-ROUND(SUM(CASE WHEN state = 'Successful' THEN 1 ELSE 0 END)*100/COUNT(*),2) AS success_rate,
-ROUND(SUM(CASE WHEN state = 'Failed' THEN 1 ELSE 0 END)*100/COUNT(*),2) AS failed_rate
+ROUND(SUM(CASE WHEN state = 'Failed' THEN 1 ELSE 0 END)*100/COUNT(*),2) AS failing_rate
 FROM kickstart
 WHERE state IN ('Successful','Failed')
 GROUP BY duration_bucket
-ORDER BY success_rate DESC;
-
-
-
-
+ORDER BY failing_rate DESC;
