@@ -86,6 +86,9 @@ LIMIT 3;
 
 # Overall Conclusions
 **1. Campaigns lasting 0–30 days achieve the highest success rates, making shorter durations more effective.**
+
 **2. Very long campaigns (>90 days) have the lowest success rates and are least effective.**
+
 **3. Campaigns launched between February and April show the strongest performance.**
+
 **4. December campaigns perform the worst, likely due to reduced engagement.**
