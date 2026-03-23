@@ -22,7 +22,6 @@ FROM kickstart
 SELECT
 backer_bucket,
 COUNT(*) AS total_campaigns,
-SUM(state='Successful') AS successful_campaigns,
 ROUND(100 * AVG(state='Successful'),2) AS success_rate
 FROM backer_groups
 GROUP BY backer_bucket
@@ -31,28 +30,25 @@ ORDER BY success_rate DESC;
 
 ### Results
 
-| Backer Bucket | Total Campaigns | Successful Campaigns | Success Rate |
-|---------------|----------------|----------------------|--------------|
-| Viral | 12,690 | 11,946 | **94.14%** |
-| High | 18,950 | 16,565 | **87.41%** |
-| Medium | 69,519 | 53,920 | **77.56%** |
-| Low | 94,010 | 45,105 | 47.98% |
-| Very Low | 127,880 | 6,315 | 4.94% |
-| No Backers | 51,804 | 0 | **0%** |
+| Backer Bucket | Total Campaigns | Success Rate |
+|---------------|----------------|---------------|
+| Viral | 12,690 | **94.14%** |
+| High | 18,950 | **87.41%** |
+| Medium | 69,519 | **77.56%** |
+| Low | 94,010 | **47.98%** |
+| Very Low | 127,880 | **4.94%** |
+| No Backers | 51,804 | **0%** |
 
-### Key Insight
-**Success probability increases dramatically as the number of backers grows:**
+### Insights
+- Success rate increases sharply with the number of backers.
 - Campaigns with no backers never succeed.
-- Campaigns with very few backers succeed only ~5% of the time.
-- Campaigns with 200+ backers achieve success rates above 75%.
-- Campaigns with 500+ backers succeed over 90% of the time.
+- Campaigns with 200+ backers exceed 75% success rates.
+- Campaigns with 500+ backers achieve over 90% success rates.
 
-**This shows a strong positive relationship between community size and campaign success**.
+## Conclusions
+**1. Backer engagement is one of the strongest drivers of campaign success.**
 
-### Conclusion
-- Backer engagement is one of the strongest predictors of crowdfunding success.
-
-- Campaigns that attract a large community early are significantly more likely to reach their funding goals due to momentum, visibility, and social validation.
+**2. Larger communities create momentum, visibility, and trust.**
 
 ---
 
@@ -82,7 +78,6 @@ WHERE backers > 0
 SELECT
 pledged_per_backer_bucket,
 COUNT(*) AS total_campaigns,
-SUM(state='Successful') AS successful_campaigns,
 ROUND(100 * AVG(state='Successful'),2) AS success_rate
 FROM pledged_backer_bucket
 GROUP BY pledged_per_backer_bucket
@@ -91,29 +86,30 @@ ORDER BY success_rate DESC;
 
 ### Results
 
-| Backer Type | Total Campaigns | Successful Campaigns | Success Rate |
-|-------------|---------------|---------------------|-------------|
-| Very Large Backers | 60,853 | 34,403 | **56.53%** |
-| Large Backers | 91,983 | 50,735 | **55.16%** |
-| Moderate Backers | 108,034 | 42,814 | 39.63% |
-| Small Backers | 62,179 | 5,899 | **9.49%** |
+| Backer Type | Total Campaigns | Success Rate |
+|-------------|---------------|-------------|
+| Very Large Backers | 60,853 | **56.53%** |
+| Large Backers | 91,983 | **55.16%** |
+| Moderate Backers | 108,034 | **39.63%** |
+| Small Backers | 62,179 | **9.49%** |
 
-### Key Insight
-**Campaigns with higher average pledge per backer show higher success rates**:
-- Small pledge campaigns succeed only **~9% of the time**
-- Moderate pledge campaigns succeed **~40%**
-- Large pledge campaigns exceed **55% success**
+### Insights
+- Higher average pledge per backer leads to higher success rates.
+- Small pledge campaigns have very low success (~9%).
+- Large and very large backers push success rates above 55%.
 
-### Conclusion
-- While larger average contributions correlate with higher success rates, crowdfunding success is typically driven by a combination of community size and pledge magnitude rather than large contributions alone.
+## Conclusion
+**1. Success is influenced by both number of backers and contribution size.**
+
+**2. Strong campaigns combine large communities with meaningful contributions.**
 
 ---
 
 # Overall Conclusion
-1. Campaigns with more backers have dramatically higher success rates. Projects with 200+ backers exceed a 75% success rate, while campaigns with 500+ backers succeed over 90% of the time.
+**1. Campaigns with more backers have significantly higher success rates, with 500+ backers achieving over 90% success.**
 
-2. Campaigns with no backers never succeed, and those with very few backers (~0–10) succeed only about 5% of the time, highlighting the importance of early community engagement.
+**2. Campaigns with no or very few backers rarely succeed, highlighting the importance of early traction.**
 
-3. Campaigns with larger average pledges per backer achieve higher success rates, with large and very large contributors pushing success rates above 55%.
+**3.Higher average pledge per backer improves success rates, with large contributors increasing campaign performance.**
 
-4. Campaigns driven primarily by small pledges show very low success rates (~9%), indicating that higher-value contributions significantly strengthen campaign outcomes.
+**4. The most successful campaigns balance both strong community size and higher-value contributions.**
