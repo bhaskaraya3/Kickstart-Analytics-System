@@ -9,7 +9,7 @@
 
 ### SQL Query
 ```sql
-WITH ranked_goals AS(
+WITH ranked_goals AS (
 SELECT
 category,
 goal,
@@ -17,7 +17,7 @@ ROW_NUMBER() OVER (PARTITION BY category ORDER BY goal) AS rn,
 COUNT(*) OVER (PARTITION BY category) AS cnt
 FROM kickstart
 ),
-category_median AS(
+category_median AS (
 SELECT
 category,
 AVG(goal) AS median_goal
@@ -25,10 +25,11 @@ FROM ranked_goals
 WHERE rn IN (FLOOR((cnt + 1) / 2), FLOOR((cnt + 2) / 2))
 GROUP BY category
 ),
-goal_flagged AS(
+goal_flagged AS (
 SELECT 
 k.state,
-CASE WHEN k.goal > 3 * c.median_goal THEN 'Unrealistic'
+CASE 
+WHEN k.goal > 3 * c.median_goal THEN 'Unrealistic'
 ELSE 'Realistic'
 END AS goal_type
 FROM kickstart k
@@ -37,27 +38,25 @@ ON k.category = c.category
 )
 SELECT 
 goal_type,
-COUNT(*) AS total_projects,
-SUM(state = 'Successful') AS successful_projects,
-AVG(state = 'Successful') AS success_rate
+ROUND(100 * AVG(CASE WHEN state = 'Successful' THEN 1 ELSE 0 END),2) AS success_rate
 FROM goal_flagged
 GROUP BY goal_type;
 ```
 
-### Results
+### Result
 
-| goal_type    | total_projects | successful_projects | success_rate |
-|-------------|----------------|--------------------|-------------|
-| Realistic   | 298,903       | 118,746            | 39.73%      |
-| Unrealistic | 75,950        | 15,105             | 19.89%      |
+| goal_type   | success_rate |
+|-------------|--------------|
+| Realistic   | 39.73%      |
+| Unrealistic | 19.89%       |
 
-### Key Insight
-- Success rate drops from **39.7% → 19.9%.**
-- That is a **19.8** percentage point decline.
-- Unrealistic campaigns are **~50%** less likely to succeed.
+### Insights
+- Success rate drops from 39.73% to 19.89%.
+- This is a ~20 percentage point decline.
+- Unrealistic campaigns are about 50% less likely to succeed.
 
-### Conclusion
-**Excessively ambitious funding targets significantly undermine campaign viability.**
+## Conclusion
+**Excessively ambitious funding targets significantly reduce campaign success probability.**
 
 ---
 
@@ -93,19 +92,19 @@ goal_summary AS (
 SELECT
 goal_range,
 COUNT(*) AS total_projects,
-ROUND(AVG(state = 'Successful'),2) AS success_rate,
+ROUND(100 * AVG(CASE WHEN state = 'Successful' THEN 1 ELSE 0 END),2) AS success_rate,
 ROUND(AVG(pledged),2) AS avg_pledged
 FROM goal_binned
 GROUP BY goal_range
 )
 SELECT
 goal_range,
-total_projects,
 success_rate,
 avg_pledged,
-ROUND((success_rate * avg_pledged),2) AS expected_value
+ROUND((success_rate/100 * avg_pledged),2) AS expected_value
 FROM goal_summary
 ORDER BY expected_value DESC;
+
 ```
 
 ### Result
@@ -120,21 +119,18 @@ ORDER BY expected_value DESC;
 | 1K-5K       | 44%         | 2,093.49   | 921.14        |
 | 0-1K        | 50%         | 721.51     | 360.76        |
 
-### Key Insight
-- Rises steadily from low ranges.
-- Peaks at **$50K–$100K.**
-- Declines sharply beyond **$100K.**
+### Insights
+- Expected returns increase initially with goal size.
+- Peak occurs at $50K–$100K.
+- Declines beyond $100K due to falling success rates.
 
-### Conclusion
-- **$50K–$100K** maximizes expected funding return.
-- **$25K–$50K** offers a strong balance of probability (22%) and return.
-- Above $100K, declining success probability outweighs higher pledges.
+## Conclusions
+**1. $50K–$100K maximizes expected funding return.**
 
-### Risk 
-While $50K–$100K maximizes expected value:
-- Success rate is only 15%.
-- Volatility is higher.
-- May require stronger brand validation.
+**2. $25K–$50K provides a strong balance of risk and feasibility.**
+
+**3. Above $100K, declining success rates outweigh higher pledges.**
+
 
 ---
 
@@ -142,55 +138,47 @@ While $50K–$100K maximizes expected value:
 
 ### SQL Query
 ```sql
-WITH goal_bins AS(
+WITH goal_bins AS (
 SELECT 
 CASE
-	WHEN goal < 10000 THEN 'Low goal'
-    WHEN goal < 50000 THEN 'Medium goal'
-    WHEN goal < 200000 THEN 'High goal'
-    ELSE 'Very High goal'
+	WHEN goal < 10000 THEN 'Low Goal'
+	WHEN goal < 50000 THEN 'Medium Goal'
+	WHEN goal < 200000 THEN 'High Goal'
+ELSE 'Very High Goal'
 END AS goal_groups,
 state
 FROM kickstart
 )
 SELECT 
 goal_groups,
-COUNT(*) AS total_campaigns,
-SUM(CASE WHEN state='Successful' THEN 1 ELSE 0 END) AS successful_campaigns,
-ROUND(100*AVG(state = 'Successful'),2) AS success_rate
+ROUND(100 * AVG(CASE WHEN state = 'Successful' THEN 1 ELSE 0 END),2) AS success_rate
 FROM goal_bins
 GROUP BY goal_groups
 ORDER BY success_rate DESC;
 ```
 
-### Results
+### Result
 
-| Goal Group | Total Campaigns | Successful Campaigns | Success Rate |
-|------------|----------------|----------------------|--------------|
-| Low goal | 229,679 | 98,950 | **43.08%** |
-| Medium goal | 108,914 | 30,547 | 28.05% |
-| High goal | 29,101 | 4,055 | 13.93% |
-| Very High goal | 7,159 | 299 | **4.18%** |
+| Goal Group | Success Rate |
+|------------|--------------|
+| Low goal   | **43.08%** |
+| Medium goal| 28.05% |
+| High goal  | 13.93% |
+| Very High goal | **4.18%** |
 
-### Key Insight
-Success probability decreases sharply as funding goals increase:
-- Low goal campaigns succeed **43% of the time**
-- Medium goal campaigns succeed **28% of the time**
-- High goal campaigns succeed **14% of the time**
-- Very high goal campaigns succeed only **4% of the time**
-
-**This indicates a strong inverse relationship between goal size and success probability.**
+### Insights
+- Success probability decreases sharply as goal size increases.
+- Low goals succeed 43%, while very high goals succeed only 4%.
+- Strong inverse relationship between goal size and success rate.
 
 ## Conclusion
-**Setting a lower funding goal significantly increases the probability of campaign success**.
+**Lower funding goals significantly increase the probability of campaign success.**
 
-# Overall Conclusion
+---
 
-1. Unrealistic funding goals significantly reduce success probability.
-Campaigns with goals greater than 3× the category median experience a success rate drop from 39.7% to 19.9%, making them roughly half as likely to succeed as realistically funded projects.
+# Overall Conclusions
+**1. Unrealistic funding goals significantly reduce success probability.**
 
-2. There is an optimal funding range that balances risk and reward.
-When considering both success probability and average pledged funding, the $50K–$100K range maximizes expected funding value, while $25K–$50K offers a strong balance of feasibility and return.
+**2. There exists an optimal funding range balancing risk and return.**
 
-3. Lower funding goals strongly increase campaign success probability.
-Campaigns with lower goals succeed 43% of the time, while very high goals succeed only 4% of the time, demonstrating a clear inverse relationship between goal size and success rate.
+**3. Lower funding goals strongly improve campaign success rates.**
