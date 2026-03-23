@@ -113,6 +113,7 @@ ORDER BY failing_rate DESC;
 
 ## Conclusion
 **1. Unrealistic funding goals significantly reduce success chances.**
+
 **2. Setting achievable goals is critical for campaign success.**
 
 ### B. Impact of Campaign Duration
@@ -148,6 +149,7 @@ ORDER BY failing_rate DESC;
 
 ## Conclusion
 **1. Short campaigns (≤30 days) are more effective and less risky.**
+
 **2. Longer duration does not improve success probability.**
 
 ---
