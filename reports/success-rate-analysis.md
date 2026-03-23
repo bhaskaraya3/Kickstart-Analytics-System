@@ -8,12 +8,11 @@
 ```sql
 SELECT
 state,
-COUNT(*) AS total_campaigns,
-ROUND(100*COUNT(*)/SUM(COUNT(*)) OVER(),2) AS percentage
+COUNT(*) AS total_projects,
+ROUND(100 * COUNT(*)/SUM(COUNT(*)) OVER(),2) AS percentage
 FROM kickstart
 WHERE state IN ('Failed','Successful')
-GROUP BY state
-ORDER BY percentage DESC;
+GROUP BY state;
 ```
 
 ### Result
@@ -27,7 +26,10 @@ ORDER BY percentage DESC;
 - Kickstarter campaigns are highly competitive.
 - More than half of creators do not meet their funding goals.
 
-**This indicates the importance of goal sizing, duration optimization, and category positioning.**
+## Conclusion
+**1. Kickstarter campaigns are high-risk, with failure being more common than success.**
+
+**2. Proper goal setting, duration, and category selection are critical for success.**
 
 ---
 
@@ -35,15 +37,16 @@ ORDER BY percentage DESC;
 
 ### SQL Query
 ```sql
-SELECT
+SELECT 
 category,
-ROUND(SUM(CASE WHEN state='Successful' THEN 1 ELSE 0 END)*100.0/COUNT(*),2) AS success_rate
+ROUND(100* SUM(CASE WHEN state='Successful' THEN 1 ELSE 0 END)/COUNT(*),2) AS success_rate
 FROM kickstart
 GROUP BY category
-ORDER BY success_rate DESC;
+ORDER BY success_rate DESC
+LIMIT 1;
 ```
 
-### Insights
+### Result
 
 #### Top Performing Categories
 | Category       | Success Rate |
@@ -52,27 +55,6 @@ ORDER BY success_rate DESC;
 | Theater       | 59.88%       |
 | Comics        | 54.00%       |
 | Music         | 48.67%       |
-
-##### Key Observations
-- Performing arts categories dominate in success rate.
-- **These campaigns likely:**
-  - Have lower funding goals
-  - May have strong community or local support
-  - Target loyal niche audiences
-- Emotion-driven and community-backed projects outperform capital-intensive ones.
-
-#### Mid-Tier Categories
-| Category       | Success Rate |
-|---------------|--------------|
-| Art           | 40.89%       |
-| Film & Video  | 37.66%       |
-| Games         | 35.54%       |
-| Design        | 35.09%       |
-
-##### Key Observations
-- Competitive but still viable.
-- Likely require strong marketing and realistic funding goals.
-- These categories may have moderately higher funding requirements, increasing risk exposure.
 
 #### Worst Performing Categories
 
@@ -84,24 +66,15 @@ ORDER BY success_rate DESC;
 | Journalism | 21.29% |
 | Technology | 19.76% |
 
-##### Insight
-- Technology is the lowest-performing category (**19.76%**).
+### Insights
+- Performing arts categories have the highest success rates.
+- Technology and high-cost categories have the lowest success rates.
+- Competitive categories require stronger marketing and positioning.
 
-##### Possible Reasons
-- Extremely high funding goals.
-- Overpromising hardware or product innovation.
-- Production and logistics complexity.
-- High competition and execution risk.
+## Conclusion
+**1. Community-driven categories perform better than high-capital categories.**
 
-##### Food, Fashion, and Crafts
-- Likely oversaturated markets.
-- Difficult product differentiation.
-- Thin margins and high operational challenges.
-
-### Conclusion
-- **Community-driven and performance-based projects have significantly higher probability of success.**
-- **High-capital and hardware-driven categories face structural risk.**
-- **Realistic goal-setting and niche targeting appear to be critical drivers of campaign success.**
+**2. Choosing the right category significantly impacts success probability.**
 
 ---
 
@@ -111,57 +84,40 @@ ORDER BY success_rate DESC;
 
 #### SQL Query
 ```sql
-SELECT 
-goal,
-pledged,
-backers,
-state
+SELECT
+CASE 
+	WHEN goal<=10000 THEN 'Low'
+	WHEN goal<=50000 THEN 'Mid'
+	WHEN goal<=100000 THEN 'High'
+	ELSE 'Extremely High'
+END AS funding_bucket,
+COUNT(*) AS campaigns,
+ROUND(SUM(CASE WHEN state='Failed' THEN 1 ELSE 0 END)/COUNT(*)*100,2) AS failing_rate
 FROM kickstart
-ORDER BY goal DESC;
+GROUP BY funding_bucket
+ORDER BY failing_rate DESC;
 ```
 
 ### Result
-#### Campaigns with extremely high funding goals show:
-
-1. Very low pledged amounts.
-2. Minimal backers.
-3. Mostly Failed, Suspended, or Canceled states.
+| Funding Bucket   | Campaigns | Failure Rate (%) |
+|------------------|----------|------------------|
+| Extremely High   | 12679    | 71.13            |
+| High             | 16353    | 66.73            |
+| Mid              | 95353    | 59.00            |
+| Low              | 250468   | 48.48            |
 
 ### Insights
-- Unrealistically high goals significantly reduce success probability.
-- Many high-goal campaigns fail to build early traction.
-- Backer participation drops sharply for large capital requirements.
+- Extremely high funding goals show the highest failure rates.
+- High-goal campaigns attract fewer backers and lower engagement.
+- Many fail due to lack of early traction.
 
-### Conclusion
-- **Setting aggressive funding goals without proven demand increases failure risk.**
-- **Goal optimization is critical for campaign viability.**
+## Conclusion
+**1. Unrealistic funding goals significantly reduce success chances.**
+**2. Setting achievable goals is critical for campaign success.**
 
 ### B. Impact of Campaign Duration
 
 #### SQL Query
-```sql
-SELECT
-campaign_duration_days,
-COUNT(*) AS total_campaigns,
-ROUND(SUM(CASE WHEN state = 'Successful' THEN 1 ELSE 0 END)*100/COUNT(*),2) AS success_rate,
-ROUND(SUM(CASE WHEN state = 'Failed' THEN 1 ELSE 0 END) * 100/COUNT(*),2) AS failed_rate
-FROM kickstart
-WHERE state IN ('Successful','Failed')
-GROUP BY campaign_duration_days
-ORDER BY campaign_duration_days DESC;
-```
-
-### Result
-| Duration        | Success Rate | Failure Rate |
-|-----------------|-------------|--------------|
-| 90+ Days        | ~32%        | ~68% |
-| 91 Days         | 31.01%      | 68.99% |
-| 92 Days         | 22.73%      | 77.27% |
-
-### Insights
-- Longer campaigns show noticeably lower success rates.
-
-### SQL Query *(Bucketed Duration)*
 ```sql
 SELECT
 CASE 
@@ -170,35 +126,42 @@ CASE
     ELSE 'Long (61+)'
 END AS duration_bucket,
 COUNT(*) AS total_campaigns,
-ROUND(SUM(CASE WHEN state = 'Successful' THEN 1 ELSE 0 END)*100/COUNT(*),2) AS success_rate,
-ROUND(SUM(CASE WHEN state = 'Failed' THEN 1 ELSE 0 END)*100/COUNT(*),2) AS failed_rate
+ROUND(SUM(CASE WHEN state = 'Failed' THEN 1 ELSE 0 END)*100/COUNT(*),2) AS failing_rate
 FROM kickstart
 WHERE state IN ('Successful','Failed')
 GROUP BY duration_bucket
-ORDER BY success_rate DESC;
+ORDER BY failing_rate DESC;
+
 ```
 
 ### Result
-| Duration Bucket | Total Campaigns | Success Rate (%) | Failure Rate (%) |
-|-----------------|----------------|------------------|------------------|
-| Short (0-30)    | 211281         | 40.88            | 59.12            |
-| Medium (31-60)  | 115357         | 39.53            | 60.47            |
-| Long (61+)      | 4824           | 38.74            | 61.26            |
+| Duration Bucket | Total Campaigns | Failure Rate (%) |
+|-----------------|----------------|------------------|
+| Long (61+)      | 4824           | 61.26            |
+| Medium (31-60)  | 115357         | 60.47            |
+| Short (0-30)    | 211281         | 59.12            |
 
 ### Insights
-1. Short campaigns (≤30 days) have the highest success rate.
-2. Success probability declines as duration increases.
-3. Extending campaign duration does not significantly improve outcomes.
+- Failure rate increases as campaign duration increases.
+- Short campaigns perform better with lower failure rates.
+- Longer campaigns tend to lose momentum over time.
 
-### Conclusion
-- **Momentum and urgency drive performance more than longer exposure.**
-- **Optimal campaign duration appears to be 30 days or less**.
+## Conclusion
+**1. Short campaigns (≤30 days) are more effective and less risky.**
+**2. Longer duration does not improve success probability.**
 
 ---
 
-## Overall Strategic Insights
+## Recommendations for Kickstarter Businesses
 
-1. **Realistic funding goals are critical for success.**
-2. **Community engagement (number of backers) strongly predicts campaign outcomes.**
-3. **Shorter campaigns generate stronger funding momentum.**
-4. **Creative and performance-based categories outperform hardware-focused projects.**
+**1. Set Realistic Funding Goals**
+  - Smaller, achievable goals increase trust and attract more backers.
+  - High funding targets often lead to lower participation and higher failure rates.
+
+**2. Keep Campaign Duration Short (≤ 30 Days)**
+  - Short campaigns create urgency and faster decision-making.
+  - Longer campaigns lose momentum and have higher failure rates.
+
+**3. Choose the Right Category**
+  - Community-driven categories perform better than high-cost ones.
+  - Selecting a category with strong demand improves success chances.
