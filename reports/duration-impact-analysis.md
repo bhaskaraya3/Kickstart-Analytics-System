@@ -2,130 +2,90 @@
 
 ---
 
-## 1. Analyze whether the duration of a Kickstarter campaign influences its probability of success.
+## 1. Does Campaign Duration Influence Success?
 
 ## SQL Query
 ```sql
-WITH campaign_duration AS (
+WITH duration_bucket AS(
 SELECT
-DATEDIFF(deadline, launched) AS duration_days,
-state
-FROM kickstart
-),
-duration_bins AS (
-SELECT
-CASE
-    WHEN duration_days <= 30 THEN 'Short (0-30)'
-    WHEN duration_days <= 60 THEN 'Medium (31-60)'
-    WHEN duration_days <= 90 THEN 'Long (61-90)'
-    ELSE 'Very Long (90+)'
+CASE 
+	WHEN campaign_duration_days <=30 THEN 'Short(0-30)' 
+    WHEN campaign_duration_days <=60 THEN 'Medium(30-60)' 
+    WHEN campaign_duration_days <=90 THEN 'Long(60-90)' 
+    ELSE 'Very Long Days'
 END AS duration_bucket,
 state
-FROM campaign_duration
+FROM kickstart
 )
-SELECT
+SELECT 
 duration_bucket,
 COUNT(*) AS total_campaigns,
-SUM(state='Successful') AS successful_campaigns,
-ROUND(100 * AVG(state='Successful'),2) AS success_rate
-FROM duration_bins
+ROUND(100*AVG(state='Successful'),2) AS success_rate
+FROM duration_bucket
 GROUP BY duration_bucket
 ORDER BY success_rate DESC;
 ```
 
 ## Result
 
-| Duration Bucket | Total Campaigns | Successful Campaigns | Success Rate (%) |
-|----------------|----------------|---------------------|------------------|
-| Short (0–30) | 236,172 | 86,380 | 36.58 |
-| Long (61–90) | 4,978 | 1,726 | 34.67 |
-| Medium (31–60) | 133,214 | 45,602 | 34.23 |
-| Very Long (90+) | 489 | 143 | 29.24 |
+| Duration Bucket | Total Campaigns | Success Rate (%) |
+|----------------|----------------|---------------------|
+| Short (0–30) | 236172 | 36.58 |
+| Long (61–90) | 4978 | 34.67 |
+| Medium (31–60) | 133214 | 34.23 |
+| Very Long (90+) | 489 | 29.24 |
 
-## Key Insights
-**Short Campaigns Perform Best**
-- Campaigns lasting **0–30 days** show the highest success rate (~36.6%).
-- Shorter campaigns may create **urgency and momentum**, encouraging faster backing decisions.
-
-**Medium and Long Campaigns Show Similar Performance**
-- Campaigns running **31–90 days** have a slightly lower success rate (~34%).  
-- This suggests that extending campaign duration does not significantly increase the chances of success.
-
-**Very Long Campaigns Perform the Worst**
-- Campaigns running **more than 90 days** have the lowest success rate (~29%).  
-- Long durations may reduce urgency and signal weaker campaign planning.
+### Insights
+- Short campaigns (0–30 days) have the highest success rate (~36.6%).
+- Medium and long campaigns (31–90 days) show similar but slightly lower performance (~34%).
+- Very long campaigns (>90 days) perform the worst (~29%).
+- Increasing duration does not improve success probability.
 
 ## Conclusion
-The analysis indicates that shorter campaigns (under 30 days) tend to perform better, while very long campaigns show declining success rates. 
-
-This suggests that maintaining urgency and momentum may be an important factor in crowdfunding success.
+**Shorter campaigns are more effective, while very long campaigns reduce the likelihood of success.**
 
 ---
 
 # 2. Best Month to Launch a Kickstarter Campaign
 
-This analysis examines campaign performance across different months to determine when campaigns are most likely to succeed. The evaluation is based on:
-- Total number of campaigns launched
-- Number of successful campaigns
-- Campaign success rate
-- Average number of backers
-- Average pledged amount
-
 ## SQL Query
 ```sql
+WITH launch_month_data AS (
 SELECT
-MONTHNAME(launched) AS launch_month,
-COUNT(*) AS total_campaigns,
-SUM(state = 'Successful') AS successful_campaigns,
-ROUND(100 * AVG(state = 'Successful'),2) AS success_rate,
-ROUND(100 * AVG(backers),2) AS avg_backers,
-ROUND(100 * AVG(pledged),2) AS avg_pledged
+state,
+MONTHNAME(launched) AS launch_month
 FROM kickstart
+)
+SELECT
+launch_month,
+COUNT(*) AS total_campaigns,
+ROUND(100 * AVG(state = 'Successful'),2) AS success_rate
+FROM launch_month_data
 GROUP BY launch_month
-ORDER BY success_rate DESC;
+ORDER BY success_rate DESC
+LIMIT 3;
 ```
 
 ## Result
-| Launch Month | Total Campaigns | Successful Campaigns | Success Rate (%) | Avg Backers | Avg Pledged |
-|---|---|---|---|---|---|
-| March | 33,511 | 12,812 | 38.23 | 10,984.63 | 953,287.56 |
-| April | 31,845 | 12,034 | 37.79 | 11,017.67 | 927,586.92 |
-| February | 29,340 | 11,003 | 37.50 | 10,729.74 | 914,498.13 |
-| October | 33,175 | 12,350 | 37.23 | 11,761.44 | 992,124.11 |
-| May | 32,654 | 12,055 | 36.92 | 11,875.37 | 1,033,992.35 |
-| September | 30,767 | 11,231 | 36.50 | 11,772.55 | 1,042,990.94 |
-| June | 32,414 | 11,773 | 36.32 | 10,525.38 | 922,922.70 |
-| November | 32,556 | 11,770 | 36.15 | 10,967.87 | 1,012,140.16 |
-| January | 27,491 | 9,480 | 34.48 | 10,445.84 | 763,989.81 |
-| August | 31,999 | 10,820 | 33.81 | 9,884.28 | 780,712.63 |
-| July | 36,097 | 11,681 | 32.36 | 9,849.21 | 894,949.54 |
-| December | 23,004 | 6,842 | 29.74 | 7,309.85 | 594,071.86 |
+| Launch Month | Total Campaigns | Success Rate (%) |
+|--------------|----------------|------------------|
+| March        | 33511          | 38.23            |
+| April        | 31845          | 37.79            |
+| February     | 29340          | 37.50            |
 
-## Key Insights
-**March Shows the Highest Success Rate**
-- Campaigns launched in **March** achieved the highest success rate (~38.23%).
-- This suggests that early spring may provide favorable conditions for campaign visibility and backer engagement.
-
-**Strong Performance in Early Spring**
-- Months like **April** and **February** also show high success rates (~37–38%), indicating that campaigns launched during this period tend to perform well.
-
-**Lower Performance During Year-End**
-- Campaigns launched in **December** show the lowest success rate (~29.74%) along with the lowest average pledged amount and fewer average backers.  
-
-- Holiday distractions and reduced online engagement may contribute to this trend.
+### Insights
+- March has the highest success rate (~38.23%).
+- February and April also show strong performance (~37–38%).
+- Mid-year months show stable but slightly lower performance.
+- December has the lowest success rate (~29.74%).
 
 ## Conclusion
-- Campaigns launched during late winter and early spring (February–April) tend to achieve the highest success rates, while December campaigns show the weakest performance.  
-
-- Creators may increase their chances of success by strategically launching campaigns during months with historically stronger engagement and funding outcomes.
+**Campaigns launched between February and April perform best, while December shows the weakest performance.**
 
 ---
 
-# Overall Conclusion
-1. Campaigns lasting 0–30 days achieve the highest success rate (36.6%), indicating that shorter campaigns tend to perform better by creating urgency and faster backing decisions.
-
-2. Campaigns running more than 90 days have the lowest success rate (~29%), suggesting that excessively long durations may reduce urgency and signal weaker campaign planning.
-
-3. Campaigns launched during late winter and early spring (February–April) show the highest success rates (~37–38%), indicating stronger engagement during this period.
-
-4. December campaigns have the lowest success rate (~29.7%) along with fewer backers and lower pledged amounts, likely due to holiday distractions and reduced engagement.
+# Overall Conclusions
+**1. Campaigns lasting 0–30 days achieve the highest success rates, making shorter durations more effective.**
+**2. Very long campaigns (>90 days) have the lowest success rates and are least effective.**
+**3. Campaigns launched between February and April show the strongest performance.**
+**4. December campaigns perform the worst, likely due to reduced engagement.**
