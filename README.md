@@ -57,7 +57,7 @@ The dataset contains information about Kickstarter campaigns, including:
 - Data-driven decision making
 - Behavioral pattern analysis
 
-**Tech Stack**
+## Tech Stack
 - SQL (MySQL)
 - Python (Pandas, Matplotlib, Seaborn)
 - Power BI (Dashboarding & Data Modeling)
