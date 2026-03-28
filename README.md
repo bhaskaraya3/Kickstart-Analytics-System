@@ -3,7 +3,7 @@
 ---
 
 ## Project Overview
-This project analyzes Kickstarter campaign data to reveal unhidden trends and insights that can help creators optimize their campaigns for success.
+This project analyzes Kickstarter campaign data to reveal hidden trends and insights that can help creators optimize their campaigns for success.
 
 We explore various factors such as campaign duration, funding goals, category performance, and more to understand what contributes to a successful Kickstarter campaign.
 
@@ -57,8 +57,13 @@ The dataset contains information about Kickstarter campaigns, including:
 - Data-driven decision making
 - Behavioral pattern analysis
 
+**Tech Stack**
+- SQL (MySQL)
+- Python (Pandas, Matplotlib, Seaborn)
+- Power BI (Dashboarding & Data Modeling)
+
 ## Future Improvement
-- Building an **interactive dashboard using Power BI**
+- Building an **interactive dashboard using Power BI(Done)**
 - Developing a **machine learning model to predict campaign success**
 - Analyzing **category-specific success patterns**
 
