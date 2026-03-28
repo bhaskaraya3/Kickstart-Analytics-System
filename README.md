@@ -12,10 +12,10 @@ We explore various factors such as campaign duration, funding goals, category pe
 ## Dashboard Preview
 
 ### 🔹 Overview Dashboard
-![Overview Dashboard](powerBi/overview.jpg)
+![Overview Dashboard](powerBI/overview.jpg)
 
 ### 🔹 Success Drivers Dashboard
-![Success Drivers Dashboard](powerBi/drivers.jpg)
+![Success Drivers Dashboard](powerBI/drivers.jpg)
 
 ---
 
