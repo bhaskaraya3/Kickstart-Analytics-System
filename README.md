@@ -8,14 +8,14 @@ This project analyzes Kickstarter campaign data to reveal unhidden trends and in
 We explore various factors such as campaign duration, funding goals, category performance, and more to understand what contributes to a successful Kickstarter campaign.
 
 ---
-
+z
 ## Dashboard Preview
 
 ### 🔹 Overview Dashboard
-![Overview Dashboard](powerBi/images/overview.jpg)
+![Overview Dashboard](powerBi/overview.jpg)
 
 ### 🔹 Success Drivers Dashboard
-![Success Drivers Dashboard](powerBi/images/drivers.jpg)
+![Success Drivers Dashboard](powerBi/drivers.jpg)
 
 ---
 
